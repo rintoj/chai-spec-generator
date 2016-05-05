@@ -24,15 +24,14 @@ function generateSepc(target, context, specs) {
         specs.push(context + '.should.be.a(\'object\');');
         Object.keys(target).map(function (key) {
             specs.push(context + '.should.have.property(\'' + key + '\');');
-            context += '.' + key;
             if (target[key] instanceof Array) {
-                generateSepc(target[key], context, specs);
+                generateSepc(target[key], context + '.' + key, specs);
             } else if (typeof target[key] === 'object') {
-                generateSepc(target[key], context, specs);
+                generateSepc(target[key], context + '.' + key, specs);
             } else if (isNaN(target[key])) {
-                specs.push(context + '.should.be.equal(\'' + target[key] + '\');');
+                specs.push(context + '.' + key + '.should.be.equal(\'' + target[key] + '\');');
             } else {
-                specs.push(context + '.should.be.equal(' + target[key] + ');');
+                specs.push(context + '.' + key + '.should.be.equal(' + target[key] + ');');
             }
         });
     }
@@ -65,7 +64,7 @@ export function activate(context: vscode.ExtensionContext) {
                 edit.replace(editor.selection, specs.join('\n'));
             });
         } catch (e) {
-            vscode.window.showInformationMessage('I do not understand this!');
+            
         }
     });
 
