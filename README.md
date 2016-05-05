@@ -1,10 +1,10 @@
 # chai-spec-generator
-This extension will generate chai test specs from a javascript object.
 
+This extension will generate chai test specs from a javascript object.
 
 ## Usgae
 
-Select a javascript object in the editor and press Ctrl / Cmd + U.
+Select a javascript object in a text editor and press `Ctrl + U` / `Cmd + U`
 
 ## Example
 
@@ -63,11 +63,12 @@ target.status.item.should.all.have.property('roles')
 ```
 
 ## Contributing
-Contributions are very welcome! Just send a pull request. Feel free to contact me or checkout my [Github](https://github.com/rintoj) page.
+
+Contributions are very welcome! Just send a pull request. Feel free to contact me or checkout my [Github](https://github.com/rintoj/chai-spec-generator) page.
 
 ## Author
 
-**Rinto Jose** (rintoj) 
+**Rinto Jose** (rintoj)
 
 Follow me:
   [Github](https://github.com/rintoj)
@@ -77,6 +78,7 @@ Follow me:
 | [Youtube](https://youtube.com/+RintoJoseMankudy)
 
 ## License
+
 ```
 The MIT License (MIT)
 
