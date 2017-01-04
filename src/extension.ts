@@ -18,8 +18,8 @@ function generateSpec(target, context, specs) {
     if (target instanceof Array) {
         specs.push(context + '.be.a(\'array\');');
         specs.push(context + '.be.length(' + target.length + ');');
-        getProperties(target).map((property) => {
-            specs.push(context + '.all.have.property(\'' + property + '\')');
+        target.map(function (item, index) {
+            generateSpec(item, context.replace(/\)$/, '') + '[' + index + '])', specs);
         });
     } else if (typeof target === 'object') {
         specs.push(context + '.be.a(\'object\');');
