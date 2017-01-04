@@ -2,7 +2,7 @@
   "name": "chai-spec-generator",
   "displayName": "chai-spec-generator",
   "description": "Generates spec assertion code for a selected object or array",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "publisher": "rintoj",
   "engines": {
     "vscode": "^1.0.0"
