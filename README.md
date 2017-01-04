@@ -2,7 +2,7 @@
 
 This extension will generate chai test specs from a javascript object.
 
-## Usgae
+## Usage
 
 Select a javascript object in a text editor and press `Ctrl + U` / `Cmd + U`
 

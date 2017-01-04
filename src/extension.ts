@@ -1,4 +1,5 @@
 'use strict';
+
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
@@ -13,25 +14,25 @@ function getProperties(array) {
     return Object.keys(object);
 }
 
-function generateSepc(target, context, specs) {
+function generateSpec(target, context, specs) {
     if (target instanceof Array) {
-        specs.push(context + '.should.be.a(\'array\');');
-        specs.push(context + '.should.be.length(' + target.length + ');');
+        specs.push(context + '.be.a(\'array\');');
+        specs.push(context + '.be.length(' + target.length + ');');
         getProperties(target).map((property) => {
-            specs.push(context + '.should.all.have.property(\'' + property + '\')');
+            specs.push(context + '.all.have.property(\'' + property + '\')');
         });
     } else if (typeof target === 'object') {
-        specs.push(context + '.should.be.a(\'object\');');
+        specs.push(context + '.be.a(\'object\');');
         Object.keys(target).map(function (key) {
-            specs.push(context + '.should.have.property(\'' + key + '\');');
+            specs.push(context + '.have.property(\'' + key + '\');');
             if (target[key] instanceof Array) {
-                generateSepc(target[key], context + '.' + key, specs);
+                generateSpec(target[key], context.replace(/\)$/, '') + '.' + key + ')', specs);
             } else if (typeof target[key] === 'object') {
-                generateSepc(target[key], context + '.' + key, specs);
+                generateSpec(target[key], context.replace(/\)$/, '') + '.' + key + ')', specs);
             } else if (isNaN(target[key])) {
-                specs.push(context + '.' + key + '.should.be.equal(\'' + target[key] + '\');');
+                specs.push(context.replace(/\)$/, '') + '.' + key + ')' + '.be.equal(\'' + target[key] + '\');');
             } else {
-                specs.push(context + '.' + key + '.should.be.equal(' + target[key] + ');');
+                specs.push(context.replace(/\)$/, '') + '.' + key + ')' + '.be.equal(' + target[key] + ');');
             }
         });
     }
@@ -59,12 +60,12 @@ export function activate(context: vscode.ExtensionContext) {
 
         try {
             let target = eval('(' + text + ')');
-            let specs = generateSepc(target, 'target', []);
+            let specs = generateSpec(target, 'expect(target)', []);
             editor.edit((edit) => {
                 edit.replace(editor.selection, specs.join('\n'));
             });
         } catch (e) {
-            
+
         }
     });
 
