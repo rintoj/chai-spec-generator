@@ -25,15 +25,9 @@ function generateSpec(target, context, specs) {
         specs.push(context + '.be.a(\'array\');');
         specs.push(context + '.be.length(' + target.length + ');');
         target.map(function (item, index) {
-            if (typeof item === 'string') {
-                specs.push(context + '.be.equal(\'' + item + '\');');
-            } else if (typeof item !== 'object') {
-                specs.push(context + '.be.equal(' + item + ');');
-            } else {
-                generateSpec(item, context.replace(/\)$/, '') + '[' + index + '])', specs);
-                newLine(specs);
-            }
+            generateSpec(item, context.replace(/\)$/, '') + '[' + index + '])', specs);
         });
+        newLine(specs);
     } else if (typeof target === 'object') {
         specs.push(context + '.be.a(\'object\');');
         Object.keys(target).map(function (key) {
@@ -49,6 +43,10 @@ function generateSpec(target, context, specs) {
             }
             newLine(specs);
         });
+    } else if (typeof target === 'string') {
+        specs.push(context + '.be.equal(\'' + target + '\');');
+    } else {
+        specs.push(context + '.be.equal(' + target + ');');
     }
 
     return specs;
