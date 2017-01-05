@@ -14,12 +14,25 @@ function getProperties(array) {
     return Object.keys(object);
 }
 
+function newLine(specs) {
+    if ((specs || ['']).slice(-1)[0] !== '') {
+        specs.push('');
+    }
+}
+
 function generateSpec(target, context, specs) {
     if (target instanceof Array) {
         specs.push(context + '.be.a(\'array\');');
         specs.push(context + '.be.length(' + target.length + ');');
         target.map(function (item, index) {
-            generateSpec(item, context.replace(/\)$/, '') + '[' + index + '])', specs);
+            if (typeof item === 'string') {
+                specs.push(context + '.be.equal(\'' + item + '\');');
+            } else if (typeof item !== 'object') {
+                specs.push(context + '.be.equal(' + item + ');');
+            } else {
+                generateSpec(item, context.replace(/\)$/, '') + '[' + index + '])', specs);
+                newLine(specs);
+            }
         });
     } else if (typeof target === 'object') {
         specs.push(context + '.be.a(\'object\');');
@@ -34,6 +47,7 @@ function generateSpec(target, context, specs) {
             } else {
                 specs.push(context.replace(/\)$/, '') + '.' + key + ')' + '.be.equal(' + target[key] + ');');
             }
+            newLine(specs);
         });
     }
 
