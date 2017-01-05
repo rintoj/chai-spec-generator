@@ -60,7 +60,7 @@ export function activate(context: vscode.ExtensionContext) {
 
         try {
             let target = eval('(' + text + ')');
-            let specs = generateSpec(target, 'expect(target)', []);
+            let specs = generateSpec(target, 'expect(result)', []);
             editor.edit((edit) => {
                 edit.replace(editor.selection, specs.join('\n'));
             });
