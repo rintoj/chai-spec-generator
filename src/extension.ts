@@ -32,17 +32,21 @@ function generateSpec(target, context, specs) {
         specs.push(context + '.be.a(\'object\');');
         Object.keys(target).map(function (key) {
             specs.push(context + '.have.property(\'' + key + '\');');
+            let keyRef = /^[a-zA-Z0-9_]+$/g.test(key) ? `.${key}` : `['${key}']`;
+            let contextRef = `${context.replace(/\)$/, '')}${keyRef})`;
             if (target[key] instanceof Array) {
-                generateSpec(target[key], context.replace(/\)$/, '') + '.' + key + ')', specs);
+                generateSpec(target[key], contextRef, specs);
             } else if (typeof target[key] === 'object') {
-                generateSpec(target[key], context.replace(/\)$/, '') + '.' + key + ')', specs);
+                generateSpec(target[key], contextRef, specs);
             } else if (isNaN(target[key])) {
-                specs.push(context.replace(/\)$/, '') + '.' + key + ')' + '.be.equal(\'' + target[key] + '\');');
+                specs.push(contextRef + '.be.equal(\'' + target[key] + '\');');
             } else {
-                specs.push(context.replace(/\)$/, '') + '.' + key + ')' + '.be.equal(' + target[key] + ');');
+                specs.push(contextRef + '.be.equal(' + target[key] + ');');
             }
             newLine(specs);
         });
+    } else if (target == undefined) {
+        specs.push(context + '.be.undefined;');
     } else if (typeof target === 'string') {
         specs.push(context + '.be.equal(\'' + target + '\');');
     } else {
