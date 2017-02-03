@@ -20,19 +20,25 @@
   ],
   "main": "./out/src/extension",
   "contributes": {
-    "commands": [
-      {
-        "command": "extension.generate-test-spec",
-        "title": "Generate Test Spec"
-      }
-    ]
+    "commands": [{
+      "command": "extension.generate-test-spec",
+      "title": "Generate Test Spec"
+    }]
   },
   "scripts": {
     "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
     "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
-    "postinstall": "node ./node_modules/vscode/bin/install"
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "tdd": "concurrently -r 'npm run compile' 'npm run test:watch'",
+    "test": "istanbul cover ./node_modules/mocha/bin/_mocha -- **/*.spec.js",
+    "test:watch": "nodemon --delay 1 --watch out --watch test --exec 'npm run test'"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
+    "concurrently": "^3.1.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.2.0",
+    "nodemon": "^1.11.0",
     "typescript": "^1.8.5",
     "vscode": "^0.11.0"
   }
