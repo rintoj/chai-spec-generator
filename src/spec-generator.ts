@@ -30,6 +30,8 @@ export function generateSpec(target: any, options?: Options) {
 function generateArrayCheck(style, source, q, s) {
   if (style === 'jasmine') {
     return `expect(${source} instanceof Array).toBeTruthy()${s}`
+  } else if (style === 'should') {
+    return `${source}.should.be.a(${q}array${q})${s}`
   }
   return `expect(${source}).be.a(${q}array${q})${s}`
 }
@@ -37,6 +39,8 @@ function generateArrayCheck(style, source, q, s) {
 function generateArrayLengthCheck(style, source, length, q, s) {
   if (style === 'jasmine') {
     return `expect(${source}.length).toEqual(${length})${s}`
+  } else if (style === 'should') {
+    return `${source}.should` + (length === 0 ? `.be.empty${s}` : `.be.length(${length})${s}`)
   }
   return `expect(${source})` + (length === 0 ? `.be.empty${s}` : `.be.length(${length})${s}`)
 }
@@ -44,6 +48,8 @@ function generateArrayLengthCheck(style, source, length, q, s) {
 function generateObjectCheck(style, source, q, s) {
   if (style === 'jasmine') {
     return `expect(typeof ${source} === ${q}object${q} && !(${source} instanceof Array)).toBeTruthy()${s}`
+  } else if (style === 'should') {
+    return `${source}.should.be.a(${q}object${q})${s}`
   }
   return `expect(${source}).be.a(${q}object${q})${s}`
 }
@@ -51,6 +57,8 @@ function generateObjectCheck(style, source, q, s) {
 function generatePropertyCheck(style, source, value, q, s) {
   if (style === 'jasmine') {
     return `expect(Object.keys(${source})).toContain(${q}${value}${q})${s}`
+  } else if (style === 'should') {
+    return `${source}.should.have.property(${q}${value}${q})${s}`
   }
   return `expect(${source}).have.property(${q}${value}${q})${s}`
 }
@@ -58,6 +66,8 @@ function generatePropertyCheck(style, source, value, q, s) {
 function generateDefinedCheck(style, source, value, q, s) {
   if (style === 'jasmine') {
     return `expect(${source}).toBeDefined()${s}`
+  } else if (style === 'should') {
+    return `${source}.should.be.exist${s}`
   }
   return `expect(${source}).be.exist${s}`
 }
@@ -65,6 +75,8 @@ function generateDefinedCheck(style, source, value, q, s) {
 function generateUndefinedCheck(style, source, value, q, s) {
   if (style === 'jasmine') {
     return `expect(${source}).toBeUndefined()${s}`
+  } else if (style === 'should') {
+    return `${source}.should.be.undefined${s}`
   }
   return `expect(${source}).be.undefined${s}`
 }
@@ -77,7 +89,15 @@ function generateEqualCheck(style, source, value, q, s) {
       return `expect(${source}).toEqual(${value})${s}`
     }
     return `expect(${source}).toEqual(${q}${value}${q})${s}`
+  } else if (style === 'should') {
+    if (value === null || typeof value === 'boolean') {
+      return `${source}.should.be.equal(${value})${s}`
+    } else if (typeof value === 'number' && !isNaN(value)) {
+      return `${source}.should.be.equal(${value})${s}`
+    }
+    return `${source}.should.be.equal(${q}${value}${q})${s}`
   }
+
   if (value === null || typeof value === 'boolean') {
     return `expect(${source}).be.equal(${value})${s}`
   } else if (typeof value === 'number' && !isNaN(value)) {
