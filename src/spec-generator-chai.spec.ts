@@ -1,10 +1,7 @@
 import { expect } from 'chai'
 import { generateSpec } from './spec-generator'
 
-describe('generateSpec', () => {
-  it('should be a function', () => {
-    expect(generateSpec).to.be.function
-  })
+describe('generateSpec in chai style', () => {
 
   it('should generate spec if given true', () => {
     let result = generateSpec(true)
@@ -24,7 +21,7 @@ describe('generateSpec', () => {
     let result = generateSpec('defined', { special: true })
     expect(result).be.a('array');
     expect(result).be.length(1);
-    expect(result[0]).be.equal('expect(result).be.defined;');
+    expect(result[0]).be.equal('expect(result).be.exist;');
   })
 
   it('should generate spec if given undefined', () => {
@@ -46,7 +43,7 @@ describe('generateSpec', () => {
     expect(result).be.a('array');
     expect(result).be.length(3);
     expect(result[0]).be.equal('expect(result).be.a(\'array\');');
-    expect(result[1]).be.equal('expect(result).be.length(0);');
+    expect(result[1]).be.equal('expect(result).be.empty;');
   })
 
   it('should generate spec if given array of strings', () => {
@@ -168,7 +165,7 @@ describe('generateSpec', () => {
 
 })
 
-describe('generateSpec with options quote = double quote', () => {
+describe('generateSpec in chai style with double quote', () => {
 
   it('should generate spec with double quote if given empty object', () => {
     let result = generateSpec({}, { quote: '"' })
@@ -182,7 +179,7 @@ describe('generateSpec with options quote = double quote', () => {
     expect(result).be.a('array');
     expect(result).be.length(3);
     expect(result[0]).be.equal('expect(result).be.a("array");');
-    expect(result[1]).be.equal('expect(result).be.length(0);');
+    expect(result[1]).be.equal('expect(result).be.empty;');
   })
 
   it('should generate spec with double quote if given array of strings', () => {
@@ -297,7 +294,7 @@ describe('generateSpec with options quote = double quote', () => {
   })
 })
 
-describe('generateSpec with option semicolon false', () => {
+describe('generateSpec in chai style with semicolon false', () => {
 
   it('should generate spec without semicolon if given true', () => {
     let result = generateSpec(true, { semicolon: false })
@@ -317,7 +314,7 @@ describe('generateSpec with option semicolon false', () => {
     let result = generateSpec('defined', { special: true, semicolon: false })
     expect(result).be.a('array');
     expect(result).be.length(1);
-    expect(result[0]).be.equal('expect(result).be.defined');
+    expect(result[0]).be.equal('expect(result).be.exist');
   })
 
   it('should generate spec without semicolon if given undefined', () => {
@@ -339,7 +336,7 @@ describe('generateSpec with option semicolon false', () => {
     expect(result).be.a('array');
     expect(result).be.length(3);
     expect(result[0]).be.equal('expect(result).be.a(\'array\')');
-    expect(result[1]).be.equal('expect(result).be.length(0)');
+    expect(result[1]).be.equal('expect(result).be.empty');
   })
 
   it('should generate spec without semicolon if given array of strings', () => {

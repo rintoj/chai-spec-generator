@@ -3,8 +3,12 @@
     "module": "commonjs",
     "target": "es5",
     "outDir": "out",
+    "moduleResolution": "node",
     "noLib": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "types": [
+      "chai"
+    ]
   },
   "exclude": [
     "node_modules",
