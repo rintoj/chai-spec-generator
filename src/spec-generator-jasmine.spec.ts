@@ -24,6 +24,20 @@ describe('generateSpec in jasmine style', () => {
     expect(result[0]).be.equal('expect(result).toBeDefined();');
   })
 
+  it('should generate spec for throw in es6 style', () => {
+    let result = generateSpec('throw calc(1, true)', { style: 'jasmine', special: true })
+    expect(result).be.a('array');
+    expect(result).be.length(1);
+    expect(result[0]).be.equal('expect(() => calc(1, true)).toThrow();');
+  })
+
+  it('should generate spec for throw in es5 style', () => {
+    let result = generateSpec('throw calc(1, true)', { style: 'jasmine', special: true, es6: false })
+    expect(result).be.a('array');
+    expect(result).be.length(1);
+    expect(result[0]).be.equal('expect(function() { calc(1, true); }).toThrow();');
+  })
+
   it('should generate spec if given undefined', () => {
     let result = generateSpec(undefined, { style: 'jasmine' })
     expect(result).be.a('array');
@@ -186,6 +200,20 @@ describe('generateSpec in jasmine style with options semicolon = false', () => {
     expect(result).be.a('array');
     expect(result).be.length(1);
     expect(result[0]).be.equal('expect(result).toBeDefined()');
+  })
+
+  it('should generate spec for throw in es6 style and without semicolon', () => {
+    let result = generateSpec('throw calc(1, true)', { style: 'jasmine', special: true, semicolon: false })
+    expect(result).be.a('array');
+    expect(result).be.length(1);
+    expect(result[0]).be.equal('expect(() => calc(1, true)).toThrow()');
+  })
+
+  it('should generate spec for throw in es5 style and without semicolon', () => {
+    let result = generateSpec('throw calc(1, true)', { style: 'jasmine', special: true, es6: false, semicolon: false })
+    expect(result).be.a('array');
+    expect(result).be.length(1);
+    expect(result[0]).be.equal('expect(function() { calc(1, true) }).toThrow()');
   })
 
   it('should generate spec without semicolon if given undefined', () => {

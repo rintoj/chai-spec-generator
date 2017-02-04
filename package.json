@@ -1,7 +1,7 @@
 {
   "name": "chai-spec-generator",
-  "displayName": "chai-spec-generator",
-  "description": "Generates spec assertion code for a selected object or array",
+  "displayName": "Test Spec Generator",
+  "description": "Generates spec assertion code for a selected object or array. Supports chai, should and jasmine formats",
   "version": "0.3.2",
   "publisher": "rintoj",
   "icon": "images/icon.png",
@@ -16,16 +16,56 @@
     "url": "git+https://github.com/rintoj/chai-spec-generator.git"
   },
   "activationEvents": [
-    "onCommand:extension.generate-test-spec"
+    "onCommand:specGenerator.generate"
   ],
   "main": "./out/src/extension",
   "contributes": {
-    "commands": [
-      {
-        "command": "extension.generate-test-spec",
-        "title": "Generate Test Spec"
+    "commands": [{
+      "command": "specGenerator.generate",
+      "title": "Generate Test Spec"
+    }],
+    "keybindings": [{
+      "command": "specGenerator.generate",
+      "title": "Generate Test Spec",
+      "key": "ctrl+m",
+      "mac": "cmd+m"
+    }],
+    "configuration": {
+      "type": "object",
+      "title": "Configurations for Spec Generator",
+      "properties": {
+        "specGenerator.style": {
+          "type": "string",
+          "enum": [
+            "jasmine",
+            "chai",
+            "should"
+          ],
+          "default": "chai",
+          "description": "Change spec style to 'jasmine', 'chai' or 'should'. See README.md for details."
+        },
+        "specGenerator.doubleQuote": {
+          "type": "boolean",
+          "default": false,
+          "description": "Set to true for double quotes instead of single quotes."
+        },
+        "specGenerator.variableName": {
+          "type": "string",
+          "default": "result",
+          "description": "Default variable name for generating spec. Eg: 'expect(result).to.exist;'"
+        },
+        "specGenerator.semicolon": {
+          "type": "boolean",
+          "default": true,
+          "description": "Set to true for adding semicolon at the end of each line"
+        },
+        "specGenerator.es6": {
+          "type": "boolean",
+          "default": true,
+          "description": "Set to true to use es6 style where ever applicable."
+        }
       }
-    ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "node ./node_modules/vscode/bin/compile",

@@ -24,6 +24,20 @@ describe('generateSpec in chai style', () => {
     expect(result[0]).be.equal('expect(result).be.exist;');
   })
 
+  it('should generate spec for throw in es6 style', () => {
+    let result = generateSpec('throw calc(1, true)', { special: true })
+    expect(result).be.a('array');
+    expect(result).be.length(1);
+    expect(result[0]).be.equal('expect(() => calc(1, true)).to.throw();');
+  })
+
+  it('should generate spec for throw in es5 style', () => {
+    let result = generateSpec('throw calc(1, true)', { special: true, es6: false })
+    expect(result).be.a('array');
+    expect(result).be.length(1);
+    expect(result[0]).be.equal('expect(function() { calc(1, true); }).to.throw();');
+  })
+
   it('should generate spec if given undefined', () => {
     let result = generateSpec(undefined)
     expect(result).be.a('array');
@@ -315,6 +329,20 @@ describe('generateSpec in chai style with semicolon false', () => {
     expect(result).be.a('array');
     expect(result).be.length(1);
     expect(result[0]).be.equal('expect(result).be.exist');
+  })
+
+  it('should generate spec for throw in es6 style and without semicolon', () => {
+    let result = generateSpec('throw calc(1, true)', { special: true, semicolon: false })
+    expect(result).be.a('array');
+    expect(result).be.length(1);
+    expect(result[0]).be.equal('expect(() => calc(1, true)).to.throw()');
+  })
+
+  it('should generate spec for throw in es5 style and without semicolon', () => {
+    let result = generateSpec('throw calc(1, true)', { special: true, es6: false, semicolon: false })
+    expect(result).be.a('array');
+    expect(result).be.length(1);
+    expect(result[0]).be.equal('expect(function() { calc(1, true) }).to.throw()');
   })
 
   it('should generate spec without semicolon if given undefined', () => {

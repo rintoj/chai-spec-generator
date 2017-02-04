@@ -5,8 +5,8 @@ function newLine(specs) {
   }
 }
 
-interface Options {
-  context?: string
+export interface Options {
+  variableName?: string
   specs?: string[]
   special?: boolean
   quote?: string
@@ -17,11 +17,12 @@ interface Options {
 
 export function generateSpec(target: any, options?: Options) {
   options = Object.assign({
-    context: 'result',
+    variableName: 'result',
     specs: [],
     quote: '\'',
     semicolon: true,
-    special: false
+    special: false,
+    es6: true
   }, options)
 
   return generateSpecForChai(target, options)
@@ -106,6 +107,28 @@ function generateEqualCheck(style, source, value, q, s) {
   return `expect(${source}).be.equal(${q}${value}${q})${s}`
 }
 
+function generateThrowCheck(style, source, value, q, s, es6) {
+  if (style === 'jasmine') {
+    if (es6) {
+      return `expect(() => ${value}).toThrow()${s}`
+    } else {
+      return `expect(function() { ${value.replace(/;\s*$/, '')}${s} }).toThrow()${s}`
+    }
+  } else if (style === 'should') {
+    if (es6) {
+      return `(() => ${value}).should.to.throw()${s}`
+    } else {
+      return `(function() { ${value.replace(/;\s*$/, '')}${s} }).should.to.throw()${s}`
+    }
+  }
+
+  if (es6) {
+    return `expect(() => ${value}).to.throw()${s}`
+  } else {
+    return `expect(function() { ${value.replace(/;\s*$/, '')}${s} }).to.throw()${s}`
+  }
+}
+
 function generateSpecForChai(target: any, options: Options) {
   const q = options.quote;
   const s = options.semicolon ? ';' : ''
@@ -113,41 +136,43 @@ function generateSpecForChai(target: any, options: Options) {
 
   if (options.special) {
     if (target === 'defined') {
-      return [generateDefinedCheck(style, options.context, target.length, q, s)]
+      return [generateDefinedCheck(style, options.variableName, target.length, q, s)]
+    } else if (/^throw .+/.test(target)) {
+      return [generateThrowCheck(style, options.variableName, target.replace(/^throw /, ''), q, s, options.es6)]
     }
     return []
   }
 
   if (target instanceof Array) {
-    options.specs.push(generateArrayCheck(style, options.context, q, s))
-    options.specs.push(generateArrayLengthCheck(style, options.context, target.length, q, s))
+    options.specs.push(generateArrayCheck(style, options.variableName, q, s))
+    options.specs.push(generateArrayLengthCheck(style, options.variableName, target.length, q, s))
     target.map(function (item, index) {
       generateSpecForChai(item, Object.assign({}, options, {
-        context: `${options.context}[${index}]`
+        variableName: `${options.variableName}[${index}]`
       }));
     });
     newLine(options.specs);
 
   } else if (typeof target === 'object') {
-    options.specs.push(generateObjectCheck(style, options.context, q, s))
+    options.specs.push(generateObjectCheck(style, options.variableName, q, s))
     Object.keys(target).map(function (key) {
-      options.specs.push(generatePropertyCheck(style, options.context, key, q, s))
+      options.specs.push(generatePropertyCheck(style, options.variableName, key, q, s))
       let keyRef = /^[a-zA-Z0-9_]+$/g.test(key) ? `.${key}` : `[${q}${key}${q}]`;
-      let contextRef = `${options.context}${keyRef}`;
+      let variableName = `${options.variableName}${keyRef}`;
       if (target[key] instanceof Array) {
-        generateSpecForChai(target[key], Object.assign({}, options, { context: contextRef }));
+        generateSpecForChai(target[key], Object.assign({}, options, { variableName: variableName }));
       } else if (typeof target[key] === 'object') {
-        generateSpecForChai(target[key], Object.assign({}, options, { context: contextRef }));
+        generateSpecForChai(target[key], Object.assign({}, options, { variableName: variableName }));
       } else {
-        options.specs.push(generateEqualCheck(style, contextRef, target[key], q, s))
+        options.specs.push(generateEqualCheck(style, variableName, target[key], q, s))
       }
       newLine(options.specs);
     });
 
   } else if (target == undefined) {
-    options.specs.push(generateUndefinedCheck(style, options.context, target, q, s))
+    options.specs.push(generateUndefinedCheck(style, options.variableName, target, q, s))
   } else {
-    options.specs.push(generateEqualCheck(style, options.context, target, q, s))
+    options.specs.push(generateEqualCheck(style, options.variableName, target, q, s))
   }
 
   return options.specs;
