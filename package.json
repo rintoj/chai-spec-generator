@@ -2,7 +2,7 @@
   "name": "chai-spec-generator",
   "displayName": "Test Spec Generator",
   "description": "Generates spec assertion code for a selected object or array. Supports chai, should and jasmine formats",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "publisher": "rintoj",
   "icon": "images/icon.png",
   "engines": {
@@ -20,16 +20,20 @@
   ],
   "main": "./out/src/extension",
   "contributes": {
-    "commands": [{
-      "command": "specGenerator.generate",
-      "title": "Generate Test Spec"
-    }],
-    "keybindings": [{
-      "command": "specGenerator.generate",
-      "title": "Generate Test Spec",
-      "key": "ctrl+m",
-      "mac": "cmd+m"
-    }],
+    "commands": [
+      {
+        "command": "specGenerator.generate",
+        "title": "Generate Test Spec"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "specGenerator.generate",
+        "title": "Generate Test Spec",
+        "key": "ctrl+m",
+        "mac": "cmd+m"
+      }
+    ],
     "configuration": {
       "type": "object",
       "title": "Configurations for Spec Generator",
